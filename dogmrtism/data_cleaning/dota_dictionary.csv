@@ -1,0 +1,582 @@
+"word","category","dogmatic"
+" always ","freq_A",1
+" constant","freq_A",1
+" continous","freq_A",1
+" continual","freq_A",1
+" eternal","freq_A",1
+" evermore ","freq_A",1
+" everywhere ","freq_A",1
+" never ","freq_A",1
+" nowhere ","freq_A",1
+" permanent","freq_A",1
+" perpetual","freq_A",1
+" steadily ","freq_A",1
+" steady ","freq_A",1
+" whenever ","freq_A",1
+"all over","freq_A",1
+"all the time","freq_A",1
+"at all times","freq_A",1
+"at no time","freq_A",1
+"each time","freq_A",1
+"every time","freq_A",1
+"for ever and ever","freq_A",1
+"for ever","freq_A",1
+"from the first","freq_A",1
+"from the outset","freq_A",1
+"from times immemorial","freq_A",1
+"never more","freq_A",1
+"not anywhere","freq_A",1
+"not once","freq_A",1
+"once for all","freq_A",1
+"without letup","freq_A",1
+" frequent","freq_B",0
+" manifold ","freq_B",0
+" mostly ","freq_B",0
+" occasional","freq_B",0
+" often ","freq_B",0
+" ordinar","freq_B",0
+" passing ","freq_B",0
+" periodical","freq_B",0
+" rare","freq_B",0
+" regular","freq_B",0
+" repeated","freq_B",0
+" seldom ","freq_B",0
+" sometimes ","freq_B",0
+" sporadic","freq_B",0
+" temporar","freq_B",0
+" transient ","freq_B",0
+" transitory ","freq_B",0
+" usual","freq_B",0
+"again and again","freq_B",0
+"at times","freq_B",0
+"for a time","freq_B",0
+"for the most part","freq_B",0
+"from time to time","freq_B",0
+"here and there","freq_B",0
+"in certain circumstances","freq_B",0
+"in many cases","freq_B",0
+"in parts","freq_B",0
+"in places","freq_B",0
+"in the first instance","freq_B",0
+"now and again","freq_B",0
+"now and then","freq_B",0
+"on occasion","freq_B",0
+"once in a way","freq_B",0
+"once in a while","freq_B",0
+"several times","freq_B",0
+"way exception","freq_B",0
+" accurate","quant_A",1
+" all ","quant_A",1
+" any ","quant_A",1
+" anybody ","quant_A",1
+" anyone ","quant_A",1
+" anything ","quant_A",1
+" countless ","quant_A",1
+" each ","quant_A",1
+" every ","quant_A",1
+" everybody ","quant_A",1
+" everyman ","quant_A",1
+" everyone ","quant_A",1
+" everything ","quant_A",1
+" everywoman ","quant_A",1
+" exact ","quant_A",1
+" illimitable ","quant_A",1
+" immeasurable ","quant_A",1
+" incalculable ","quant_A",1
+" incomprehensible ","quant_A",1
+" indefinite ","quant_A",1
+" inexhaustible ","quant_A",1
+" infinit","quant_A",1
+" innumerabl","quant_A",1
+" interminable ","quant_A",1
+" limitless ","quant_A",1
+" measureless ","quant_A",1
+" naught ","quant_A",1
+" nobody ","quant_A",1
+" none ","quant_A",1
+" nothing ","quant_A",1
+" numberless ","quant_A",1
+" precise","quant_A",1
+" single ","quant_A",1
+" termless ","quant_A",1
+" total ","quant_A",1
+" totally ","quant_A",1
+" unapproachable ","quant_A",1
+" unfathomable ","quant_A",1
+" unique","quant_A",1
+" unmeasured ","quant_A",1
+" unnumbered ","quant_A",1
+" untold ","quant_A",1
+" whoever ","quant_A",1
+" whosoever ","quant_A",1
+"by no means","quant_A",1
+"dead true","quant_A",1
+"in a body","quant_A",1
+"jointly and severally","quant_A",1
+"no exception","quant_A",1
+"no one","quant_A",1
+"not a bit","quant_A",1
+"of no sort","quant_A",1
+"on no account","quant_A",1
+"without end","quant_A",1
+"without exception","quant_A",1
+"without limit","quant_A",1
+"without measure","quant_A",1
+"without number","quant_A",1
+"without reservation","quant_A",1
+" about ","quant_B",0
+" amount ","quant_B",0
+" approximat","quant_B",0
+" around ","quant_B",0
+" bit ","quant_B",0
+" chiefly ","quant_B",0
+" different ","quant_B",0
+" divers ","quant_B",0
+" diverse ","quant_B",0
+" dominant ","quant_B",0
+" few ","quant_B",0
+" largely ","quant_B",0
+" little ","quant_B",0
+" mainly ","quant_B",0
+" many ","quant_B",0
+" miscellan","quant_B",0
+" most ","quant_B",0
+" much ","quant_B",0
+" nearly ","quant_B",0
+" numerous","quant_B",0
+" partial ","quant_B",0
+" partly ","quant_B",0
+" plenty ","quant_B",0
+" plurality ","quant_B",0
+" roughly ","quant_B",0
+" series ","quant_B",0
+" several","quant_B",0
+" some ","quant_B",0
+" something ","quant_B",0
+" sundries ","quant_B",0
+" sundry ","quant_B",0
+" thereabout ","quant_B",0
+" varied ","quant_B",0
+" various ","quant_B",0
+"a quantity","quant_B",0
+"a number","quant_B",0
+"a set","quant_B",0
+"as much","quant_B",0
+"as good","quant_B",0
+"couple of","quant_B",0
+"far as","quant_B",0
+"great deal","quant_B",0
+"lot of","quant_B",0
+"lots of","quant_B",0
+"so much","quant_B",0
+"some extent","quant_B",0
+"in large part","quant_B",0
+" absolute","degree_A",1
+" abundan","degree_A",1
+" accomplished ","degree_A",1
+" altogether ","degree_A",1
+" basic","degree_A",1
+" boundless","degree_A",1
+" complete","degree_A",1
+" comprehensive","degree_A",1
+" endless","degree_A",1
+" enormous","degree_A",1
+" entire","degree_A",1
+" exceeding","degree_A",1
+" excessive","degree_A",1
+" extreme","degree_A",1
+" fair ","degree_A",1
+" full ","degree_A",1
+" fundamental","degree_A",1
+" general","degree_A",1
+" greatest ","degree_A",1
+" highest ","degree_A",1
+" huge ","degree_A",1
+" immense ","degree_A",1
+" intense ","degree_A",1
+" maximal","degree_A",1
+" maximum ","degree_A",1
+" monstrous ","degree_A",1
+" outermost ","degree_A",1
+" outmost ","degree_A",1
+" overall ","degree_A",1
+" perfect","degree_A",1
+" plentiful","degree_A",1
+" principle","degree_A",1
+" quite ","degree_A",1
+" radical","degree_A",1
+" straight","degree_A",1
+" thorough","degree_A",1
+" through ","degree_A",1
+" throughout ","degree_A",1
+" tremendous","degree_A",1
+" unbounded ","degree_A",1
+" universal","degree_A",1
+" unlimited ","degree_A",1
+" utmost ","degree_A",1
+" uttermost ","degree_A",1
+" whole ","degree_A",1
+" wholly ","degree_A",1
+"at all","degree_A",1
+"beyond measure","degree_A",1
+"every respect","degree_A",1
+"from the beginning","degree_A",1
+"not even think","degree_A",1
+"without rest","degree_A",1
+" awfully ","degree_B",0
+" almost ","degree_B",0
+" chiefly ","degree_B",0
+" comparatively ","degree_B",0
+" considerab","degree_B",0
+" detail","degree_B",0
+" disproportionat","degree_B",0
+" essential","degree_B",0
+" exceptional","degree_B",0
+" extensive","degree_A",1
+" extraordinar","degree_B",0
+" fairly ","degree_B",0
+" greatly ","degree_B",0
+" half ","degree_B",0
+" hardly ","degree_B",0
+" immaterial ","degree_B",0
+" important","degree_B",0
+" insignificant","degree_B",0
+" jolly ","degree_B",0
+" midway ","degree_B",0
+" more ","degree_B",0
+" particular","degree_B",0
+" predominant","degree_B",0
+" preponderant","degree_B",0
+" pretty ","degree_B",0
+" rather ","degree_B",0
+" flush ","degree_B",0
+" real ","degree_B",0
+" relative ","degree_B",0
+" reasonably ","degree_B",0
+" scrutiniz","degree_B",0
+" singular","degree_B",0
+" somewhat ","degree_B",0
+" special","degree_B",0
+" substantial","degree_B",0
+" sweeping","degree_B",0
+" tolerably ","degree_B",0
+" trifling ","degree_B",0
+" petty ","degree_B",0
+" unessential ","degree_B",0
+" unimportant ","degree_B",0
+" unusual","degree_B",0
+" very ","degree_B",0
+"a bit","degree_B",0
+"a certain","degree_B",0
+"a little","degree_B",0
+"a while","degree_B",0
+"by far","degree_B",0
+"in the main","degree_B",0
+"high degree","degree_B",0
+"most part","degree_B",0
+"next to","degree_B",0
+"no total","degree_B",0
+"not total","degree_B",0
+"not complete","degree_B",0
+"not altogether","degree_B",0
+" actually ","certain_A",1
+" anyhow ","certain_A",1
+" anyway ","certain_A",1
+" automatical","certain_A",1
+" certain","certain_A",1
+" clear","certain_A",1
+" coercive","certain_A",1
+" cogent","certain_A",1
+" compulsor","certain_A",1
+" convinced ","certain_A",1
+" decided","certain_A",1
+" definit","certain_A",1
+" doubtless","certain_A",1
+" established ","certain_A",1
+" fixed ","certain_A",1
+" forcibl","certain_A",1
+" immutabl","certain_A",1
+" imperative","certain_A",1
+" incontestabl","certain_A",1
+" indispensabl","certain_A",1
+" indisputabl","certain_A",1
+" inevitabl","certain_A",1
+" invariabl","certain_A",1
+" irrefutabl","certain_A",1
+" irrevocabl","certain_A",1
+" mandator","certain_A",1
+" natural","certain_A",1
+" obvious","certain_A",1
+" peremptor","certain_A",1
+" plain","certain_A",1
+" really ","certain_A",1
+" satisfied ","certain_A",1
+" sure","certain_A",1
+" truly ","certain_A",1
+" unalterabl","certain_A",1
+" unavoidabl","certain_A",1
+" unconditional","certain_A",1
+" uncontest","certain_A",1
+" undisput","certain_A",1
+" undoubted","certain_A",1
+" undubitabl","certain_A",1
+" unequivocal","certain_A",1
+" unhesitating ","certain_A",1
+" unobjectionabl","certain_A",1
+" unquestion","certain_A",1
+" unrefusing ","certain_A",1
+" unresisting ","certain_A",1
+"all cost","certain_A",1
+"any rate","certain_A",1
+"beyond dispute","certain_A",1
+"beyond doubt","certain_A",1
+"beyond question","certain_A",1
+"free from doubt","certain_A",1
+"no case","certain_A",1
+"no doubt","certain_A",1
+"no means","certain_A",1
+"not at all","certain_A",1
+"not doubt","certain_A",1
+"not in the least","certain_A",1
+"not shadow doubt","certain_A",1
+"of course","certain_A",1
+"out question","certain_A",1
+"safe to say","certain_A",1
+"self evident","certain_A",1
+"t doubt","certain_A",1
+"without doubt","certain_A",1
+"without fail","certain_A",1
+" alleged","certain_B",0
+" apparent","certain_B",0
+" assume ","certain_B",0
+" calculate ","certain_B",0
+" conceivabl","certain_B",0
+" conjectur","certain_B",0
+" consider ","certain_B",0
+" considered ","certain_B",0
+" contestabl","certain_B",0
+" contested ","certain_B",0
+" controversial ","certain_B",0
+" debatabl","certain_B",0
+" disputabl","certain_B",0
+" dispute","certain_B",0
+" doubt ","certain_B",0
+" doubts ","certain_B",0
+" doubtful","certain_B",0
+" dubious ","certain_B",0
+" especial","certain_B",0
+" eventually ","certain_B",0
+" evident","certain_B",0
+" fancy ","certain_B",0
+" guess ","certain_B",0
+" hold ","certain_B",0
+" imaginabl","certain_B",0
+" improbabl","certain_B",0
+" likelihood ","certain_B",0
+" likely ","certain_B",0
+" manifest ","certain_B",0
+" maybe ","certain_B",0
+" nevertheless ","certain_B",0
+" obscure ","certain_B",0
+" perhaps ","certain_B",0
+" plausibl","certain_B",0
+" precarious","certain_B",0
+" presumabl","certain_B",0
+" presume ","certain_B",0
+" presumpt","certain_B",0
+" probabilit","certain_B",0
+" probabl","certain_B",0
+" problematic","certain_B",0
+" query ","certain_B",0
+" question","certain_B",0
+" reckon ","certain_B",0
+" scarcely ","certain_B",0
+" sceptical","certain_B",0
+" seeming","certain_B",0
+" simply ","certain_B",0
+" still ","certain_B",0
+" suppose ","certain_B",0
+" supposed ","certain_B",0
+" suspect ","certain_B",0
+" think ","certain_B",0
+" thinkabl","certain_B",0
+" uncertain","certain_B",0
+" unclear ","certain_B",0
+" unlikely ","certain_B",0
+"after all","certain_B",0
+"anything but","certain_B",0
+"as anticipated","certain_B",0
+"as far as","certain_B",0
+"as I look","certain_B",0
+"at best","certain_B",0
+"at issue","certain_B",0
+"at least","certain_B",0
+"at most","certain_B",0
+"but a","certain_B",0
+"but an","certain_B",0
+"chances are that","certain_B",0
+"if need be","certain_B",0
+"if occasion","certain_B",0
+"if so","certain_B",0
+"it appear","certain_B",0
+"it seem","certain_B",0
+"my estimation","certain_B",0
+"my judgement","certain_B",0
+"my judgment","certain_B",0
+"my opinion","certain_B",0
+"my point of view","certain_B",0
+"not impossible","certain_B",0
+"of judgement","certain_B",0
+"of judgment","certain_B",0
+"to all appearance","certain_B",0
+"to judgement","certain_B",0
+"to judgment","certain_B",0
+"to my knowledge","certain_B",0
+"to my mind","certain_B",0
+"way it looks","certain_B",0
+" either ","exclu_A",1
+" exclusive","exclu_A",1
+" merely ","exclu_A",1
+" neither ","exclu_A",1
+" only ","exclu_A",1
+" sole ","exclu_A",1
+" solely ","exclu_A",1
+" unconditioned ","exclu_A",1
+" unrestrained ","exclu_A",1
+" unrestricted ","exclu_A",1
+"all events","exclu_A",1
+"all means","exclu_A",1
+"any case","exclu_A",1
+"no account","exclu_A",1
+"no circumstances","exclu_A",1
+"no need","exclu_A",1
+"not anything else","exclu_A",1
+"nothing but","exclu_A",1
+"nothing except","exclu_A",1
+"nothing more","exclu_A",1
+"purely simply","exclu_A",1
+"without excuse","exclu_A",1
+" additional","exclu_B",0
+" also ","exclu_B",0
+" besides ","exclu_B",0
+" beyond ","exclu_B",0
+" both ","exclu_B",0
+" comprising ","exclu_B",0
+" considering ","exclu_B",0
+" ditto ","exclu_B",0
+" equally ","exclu_B",0
+" even ","exclu_B",0
+" further ","exclu_B",0
+" furthermore ","exclu_B",0
+" henceforward ","exclu_B",0
+" inclusive","exclu_B",0
+" indeed ","exclu_B",0
+" likewise ","exclu_B",0
+" moreover ","exclu_B",0
+" or ","exclu_B",0
+" otherwise ","exclu_B",0
+" primarily ","exclu_B",0
+" relatively ","exclu_B",0
+" respectively ","exclu_B",0
+" suchlike ","exclu_B",0
+" supplementar","exclu_B",0
+" too ","exclu_B",0
+"a view to","exclu_B",0
+"above all","exclu_B",0
+"according to","exclu_B",0
+"among other","exclu_B",0
+"apart from","exclu_B",0
+"as soon as","exclu_B",0
+"as the case may","exclu_B",0
+"as well","exclu_B",0
+"aside from","exclu_B",0
+"at the same time","exclu_B",0
+"circumstances permitting","exclu_B",0
+"consideration of","exclu_B",0
+"first and foremost","exclu_B",0
+"first of all","exclu_B",0
+"in a certain","exclu_B",0
+"in a sense","exclu_B",0
+"in addition","exclu_B",0
+"in case","exclu_B",0
+"in respect to","exclu_B",0
+"in the first place","exclu_B",0
+"in the light of","exclu_B",0
+"in this way","exclu_B",0
+"just as","exclu_B",0
+"not exclusive","exclu_B",0
+"not only","exclu_B",0
+"not merely","exclu_B",0
+"not solely","exclu_B",0
+"on the one hand","exclu_B",0
+"on the other hand","exclu_B",0
+"on the other side","exclu_B",0
+"on the whole","exclu_B",0
+"or else","exclu_B",0
+"or rather","exclu_B",0
+"over and above","exclu_B",0
+"regard of","exclu_B",0
+"regard to","exclu_B",0
+"the like","exclu_B",0
+"the one","exclu_B",0
+"the other","exclu_B",0
+"under circumstances","exclu_B",0
+"view of","exclu_B",0
+"with respect to","exclu_B",0
+" cannot ","necess_A",1
+" impossib","necess_A",1
+" inable ","necess_A",1
+" must ","necess_A",1
+" necess","necess_A",1
+" shall ","necess_A",1
+" should ","necess_A",1
+" unable ","necess_A",1
+"be fated","necess_A",1
+"be to","necess_A",1
+"bound to","necess_A",1
+"can't","necess_A",1
+"can't help","necess_A",1
+"cannot help","necess_A",1
+"compelled to","necess_A",1
+"could nobody","necess_A",1
+"could not","necess_A",1
+"could only","necess_A",1
+"couldn't","necess_A",1
+"forced to","necess_A",1
+"had to","necess_A",1
+"has to","necess_A",1
+"have to","necess_A",1
+"must not","necess_A",1
+"need to","necess_A",1
+"needs to","necess_A",1
+"no alternative","necess_A",1
+"no choice ","necess_A",1
+"no option ","necess_A",1
+"not able","necess_A",1
+"not allowed","necess_A",1
+"not capable","necess_A",1
+"obliged to","necess_A",1
+"ought to","necess_A",1
+"sine qua non","necess_A",1
+"there is no ing","necess_A",1
+"zero options ","necess_A",1
+" able ","necess_B",0
+" can ","necess_B",0
+" capable ","necess_B",0
+" could ","necess_B",0
+" dare ","necess_B",0
+" depend","necess_B",0
+" may ","necess_B",0
+" might ","necess_B",0
+" possib","necess_B",0
+" would ","necess_B",0
+"could have been","necess_B",0
+"don't need","necess_B",0
+"need not","necess_B",0
+"not inable","necess_B",0
+"not unable","necess_B",0
+"open to","necess_B",0
+"ought not","necess_B",0
+"should have been","necess_B",0
+"should not","necess_B",0
+"shouldn't","necess_B",0

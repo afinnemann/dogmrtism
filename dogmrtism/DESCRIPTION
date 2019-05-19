@@ -1,0 +1,13 @@
+Package: dogmRtism
+Title: R package for psycholinguistic analysis of dogmatism
+Version: 0.1
+Authors@R: person("Adam", "Finnemann", email = "adam.finnemann@gmail.com",
+                  role = c("aut", "cre"))
+Description: The package takes a text file (in form of a column) and caluclates the Dogmatism Quotient using a dogmatism dictionary developed by Suitbert Ertel.
+Depends: R (>= 3.1.0)
+License: What license is it under?
+LazyData: true
+Imports:
+    tidyverse
+Suggests: 
+    testthat
