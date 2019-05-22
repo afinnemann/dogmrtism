@@ -69,13 +69,23 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
       tabItem(tabName = "Validation",
               fluidRow(
                 column(5,
+                       radioButtons("show","Show:",
+                                    choices = c(political_comments = "pol",
+                                                vax_antivax = "vax",
+                                                science_communication = "sc",
+                                                own_data = "own"),
+                                    choiceNames = c("Political news comments",
+                                                    "Twiter anti-vax vs vax",
+                                                    "Science Communication",
+                                                    "Own Data input")
+                                      ),
                        fileInput("file1", "Choose CSV File",
                                  multiple = TRUE,
                                  accept = c("text/csv",
                                             "text/comma-separated-values,text/plain",
                                             ".csv")
                                  ),
-                       radioButtons("sep", "Separator",
+                       radioButtons("sep", "Separator:",
                                     choices = c(Comma = ",",
                                                 Semicolon = ";",
                                                 Tab = "\t"

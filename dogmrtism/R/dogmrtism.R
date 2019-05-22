@@ -51,11 +51,12 @@ library("tidyverse")
 #' @param col the name of text column to be analysis, must be parsed as a string
 #' @param language only english version is implemented, but a german version exists and will be added later
 #'
-#' @return
+#' @return returns the original df with three addional columns: open-minded, close-minded, n-words.
 #' @export
 #'
-#' @examples dog_df <- dogmrtism(df, "text_col")
-
+#' @examples
+#' dog_df <- dogmrtism(test_df, "txt")
+#'
 dogmrtism <- function(df, #main object df
                       col, #col name w text
                       language = "eng"){#german version not implemented yet
