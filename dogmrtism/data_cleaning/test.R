@@ -14,10 +14,8 @@ pol = read.delim("nytimes.txt", header =F ) %>%
          post_id = as.factor(1:578))
 
 
+#write.csv(pol,"shiny_pol_test.csv")
 
-
-setwd("~/GitHub/dogmrtism/dogmrtism/R")
-source("dogmrtism.R")
 df <- dogmrtism(df = pol,return = "all")
 
 

@@ -40,45 +40,40 @@ library("tidyverse")
 
 
 
-dogmrtism <- function(df,
-                      language = "eng",
-                      group = NA,
-                      return = c("all","df","plot","table") ) {
 
-  #check if string
-  if (!is.character(df$txt)) stop("Error: input is not a string")
-  #check if it contains words
-  #if (  str_count(df$txt,"\\S+") < 0) stop("Error: no words found in input") or multiple rows?
+#' Analysis of Dogmatism QUotient
+#'
+#'This functiosn runs the core dogmatism analysis of text data. It is based on the dogmatism dictionary developed by Suirtbert Ertel.
+#'This dictionary contains a list of words related to open-mindedness and close-minded less. The analysis consists of calculating the
+#'proportion of these words
+#'
+#' @param df a dataframe
+#' @param col the name of text column to be analysis, must be parsed as a string
+#' @param language only english version is implemented, but a german version exists and will be added later
+#'
+#' @return
+#' @export
+#'
+#' @examples dog_df <- dogmrtism(df, "text_col")
+
+dogmrtism <- function(df, #main object df
+                      col, #col name w text
+                      language = "eng"){#german version not implemented yet
+
+  if (!is.character(df[[col]])) stop("Error: input is not a string")
+
+  #change col name to txt, used in helper function.
+  df <- rename(df, txt = UQ(as.name(col)))
+
+
 
 
   df <- predictors_extract(df)
 
 
-#  return <- c(return)
-
- # if ((return %in% "all") | (return %in% "plot")) {
-#    longdf <- df %>%
-#      gather(type, value, close_mind,open_mind)
-#
-#    if (is.na(group)){
-#      longdf %>%
-#        ggplot(aes(x = type, y = value, color = value))+
-#        geom_boxplot()
-#
-#    }else{
-#      longdf %>%
-#        ggplot(aes(x = type, y = value, color = value))+
-#        geom_boxplot() +
-#        ~facet_wrap(.~group)
-#    }
-#  }
+  #fix the naming! pass column as
 
 
- # switch(return,
-#          all = return(df),
-#          df = return(df),
-#          plot = return(plot),
-#          table = return(NA))
   return(df)
   }
 
