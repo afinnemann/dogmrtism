@@ -8,7 +8,7 @@ library(instaR)
 
 
 
-
+setwd("~/GitHub/dogmrtism/dogmrtism/app")
 
 
 # Define UI for application that draws a histogram
@@ -70,14 +70,11 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
               fluidRow(
                 column(5,
                        radioButtons("show","Show:",
-                                    choices = c(political_comments = "pol",
-                                                vax_antivax = "vax",
-                                                science_communication = "sc",
-                                                own_data = "own"),
                                     choiceNames = c("Political news comments",
                                                     "Twiter anti-vax vs vax",
                                                     "Science Communication",
-                                                    "Own Data input")
+                                                    "Own Data input"),
+                                    choiceValues = c("pol","vax","sc","own")
                                       ),
                        fileInput("file1", "Choose CSV File",
                                  multiple = TRUE,
@@ -85,6 +82,8 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
                                             "text/comma-separated-values,text/plain",
                                             ".csv")
                                  ),
+                       textInput(inputId = "txt_col","text column",
+                                  value = "txt"),
                        radioButtons("sep", "Separator:",
                                     choices = c(Comma = ",",
                                                 Semicolon = ";",
@@ -138,16 +137,26 @@ server <- function(input, output) {
 
   df <- reactive({
 
-    if (!is.null(input$file1$datapath)){
+    if (input$show == "pol"){
+      df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
+      input$txt_col <- "txt"
 
-    df <- read.csv(input$file1$datapath, header = T,sep = input$sep)
+    }else if (input$show == "vax") {
+      df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
+      input$txt_col <- "txt"
 
-    #print(head(df))
+    }else if(input$show == "sc"){
+      df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
+      input$txt_col <- "txt"
+
+    }else if(input$show = "own"){
+      df <- read.csv(input$file1$datapath, header = T,sep = input$sep)
+    }
+
 
     dog_df <- df %>%
       mutate(txt = as.character(txt)) %>%
-      dogmrtism()
-    }
+      dogmrtism(input$txt_col)
   })
 
 
@@ -198,7 +207,7 @@ server <- function(input, output) {
                            rep(hashtag2, length(tweet2)))
 
       #dogmatism test
-      dog_tweetdf <- dogmrtism(tweetdf)
+      dog_tweetdf <- dogmrtism(tweetdf,"txt")
 
 
 
