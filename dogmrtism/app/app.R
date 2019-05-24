@@ -124,7 +124,23 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
                        h3("Dogmatism ratio"),
                        plotOutput("twit_plot")
                 )
+              ),
+              fluidRow(
+                column(6,
+                       sliderInput("n_cross", h3("Choose number of folds"),
+                                   min = 5, max = 20, value = 10),
+                       actionButton("do_cross", "Click to perform cross validation")
+
+                ),
+                column(6,
+                       h3("Cross validation results"),
+                       plotOutput("cross_plot")
+                       )
+
+
               )
+
+
       )
     )
   )
@@ -223,6 +239,28 @@ server <- function(input, output) {
           facet_wrap(~key)
 
     })
+
+  eventReactive(input$do_cross,
+    output$cross_plot <- renderPlot({
+
+      dog_tweetdf() %>%
+        list_cross_val3(vars = c("close_mind","open_mind")) %>%
+        arrange(desc(mean_auc)) %>%
+        dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
+        ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
+        geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
+        geom_line()+
+        geom_point() +
+        labs(title =  "Mean AUC and SD, DOTA on Twitter Corpus", y = "In domain AUC")+
+        geom_text(size = 4,hjust = 1.5) +
+        theme_light() +
+        theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
+        #geom_hline(yintercept = 0.5) +
+        scale_y_continuous(breaks = seq(0.5,1,0.01))
+
+
+    })
+  )
 
 
 
