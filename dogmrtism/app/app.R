@@ -74,9 +74,10 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
       ),
 
       ##### Second Page
-      tabItem(tabName = "Validation",
+      tabItem(tabName = "Validation", #this consists of 1 row with two columns
               fluidRow(
-                column(5,
+                column(5,#column 1: user input
+                       ## create button to choose one of 3 default data sets, or input own
                        radioButtons("show","Show:",
                                     choiceNames = c("Political news comments",
                                                     "Twiter anti-vax vs vax",
@@ -84,25 +85,46 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
                                                     "Own Data input"),
                                     choiceValues = c("pol","vax","sc","own")
                        ),
+                       #if own data chosen, this allow user to input csv formatted files
                        fileInput("file1", "Choose CSV File",
                                  multiple = TRUE,
                                  accept = c("text/csv",
                                             "text/comma-separated-values,text/plain",
                                             ".csv")
                        ),
-                       textInput(inputId = "txt_col","text column",
+                       #allows user to specify seperator
+                       textInput(inputId = "txt_col","Column storing texts",
                                  value = "txt"),
+
                        radioButtons("sep", "Separator:",
                                     choices = c(Comma = ",",
                                                 Semicolon = ";",
-                                                Tab = "\t"
-                                    ),
-                                    selected = ","
-                       )
+                                                Tab = "\t"),
+                                    selected = ","),
+
+                       radioButtons(inputId = "split",label = "Split analysis based on column?",
+                                    choices = c("yes","no"),
+                                    choiceNames = c("yes","no"),
+                                    selected = "no"),
+
+                       textInput(inputId = "split_col","column used group analysis",
+                                 value = "enter column.")
+
                 ),
-                column(7,
+                column(7, #column two, visualizing results
                        h3("Dogmatism ratio"),
                        plotOutput("dog_plot")
+                ),
+                column(6,
+                       textOutput("dog_cross_text"),
+                       uiOutput("dog_image")
+
+                       #h4(img(src="https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg", width = "350", height = "200"))
+
+                ),
+                column(6,
+                       h3("Cross validation results"),
+                       plotOutput("dog_cross_plot")
                 )
               )
       ),
@@ -135,9 +157,11 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
               ),
               fluidRow(
                 column(6,
-                       h3("Cross validation options:"),
-                       sliderInput("n_cross", h3("Choose number of folds"),
-                                   min = 5, max = 20, value = 10)
+                       textOutput("cross_text"),
+                       uiOutput("image")
+
+                       #h4(img(src="https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg", width = "350", height = "200"))
+
                 ),
                 column(6,
                        h3("Cross validation results"),
@@ -156,45 +180,128 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
+  ################ updates for page 2: data analysis
 
+  df <- reactive({ #loading exisiting or user's own data, extract dogmatism ratios.
 
-  df <- reactive({
 
     if (input$show == "pol"){
       df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
-      input$txt_col <- "txt"
+      dog_df <- df %>%
+        mutate(txt = as.character(txt)) %>%
+        dogmrtism("txt")
 
     }else if (input$show == "vax") {
       df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
-      input$txt_col <- "txt"
+      dog_df <- df %>%
+        mutate(txt = as.character(txt)) %>%
+        dogmrtism("txt")
 
     }else if(input$show == "sc"){
       df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
-      input$txt_col <- "txt"
+      dog_df <- df %>%
+        mutate(txt = as.character(txt)) %>%
+        dogmrtism("txt")
+
 
     }else if(input$show == "own"){
       df <- read.csv(input$file1$datapath, header = T,sep = input$sep)
+      #df <- read.csv("r_pyt_test_df2.csv")
+
+      dog_df <- df %>%
+        mutate(txt = as.character(txt)) %>%
+        dogmrtism(input$txt_col)
     }
 
 
-    dog_df <- df %>%
-      mutate(txt = as.character(txt)) %>%
-      dogmrtism(input$txt_col)
-  })
-
-
-  output$dog_plot <- renderPlot({
-
-    df() %>%
-      gather(key,value, close_mind, open_mind) %>%
-      ggplot(aes(class, value)) +
-      geom_boxplot() +
-      facet_wrap(~key)
 
   })
 
 
-  ################# Twitter computations
+  output$dog_plot <- renderPlot({ #plot result
+    df <- df()
+
+    if (input$split == "yes") {
+      long <- df %>%
+        gather(variable,ratio, close_mind, open_mind)
+
+      long %>%
+        ggplot(aes(long[,input$split_col], ratio)) +
+          geom_boxplot() +
+          facet_wrap(~ variable)
+    }else{
+      df %>%
+        gather(variable,ratio, close_mind, open_mind) %>%
+        ggplot(aes(variable, ratio)) +
+          geom_boxplot()
+
+    }
+  })
+
+
+
+  #
+  dog_cros_output <- reactive({ #plot result
+
+    if (input$split == "yes") {
+      df <- df()
+      #group <- levels(df[,"hashtag"])
+      group <- levels(df[,input$split_col])
+
+      cros_val <- df %>%
+        dog_list_return(vars = c("close_mind","open_mind"),
+                        above = group[1],
+                        below = group[2],
+                        pos = group[1],
+                        n_fold = 10) #return ggplot2 friendly list of cross validation result
+
+    }
+  })
+
+  output$dog_cross_plot <- renderPlot({
+    cros_val <- dog_cros_output()
+
+      cros_val %>%
+      arrange(desc(mean_auc)) %>%
+      dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
+      ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
+      geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
+      geom_line()+
+      geom_point() +
+      labs(title =  paste("Mean AUC (and 1 SD), ",group[1], " vs. ",group[2], sep =""), y = "In domain AUC")+
+      geom_text(size = 4,hjust = 1.5) +
+      theme_light() +
+      theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
+      scale_y_continuous(breaks = seq(0.5,1,0.01))
+  })
+
+  output$dog_image <- renderUI({
+    cros_val <- dog_cros_output()
+
+    if (is.null(max(cros_val$mean_auc))){
+      NULL
+    }else if (max(cros_val$mean_auc) > 0.8){
+      setwd("~/GitHub/dogmrtism/dogmrtism/app")
+      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/done.png",width = "350", height = "200")
+    }else if (max(cros_val$mean_auc) > 0.6){
+      setwd("~/GitHub/dogmrtism/dogmrtism/app")
+      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/well-done-you-get-two-thumbs-up.jpg",width = "350", height = "200")
+
+    }else{
+      tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "350", height = "200")
+    }
+  })
+
+  output$dog_cross_text <- renderText({
+    cros_val <- dog_cros_output()
+    paste("Max performance of ",round(max(cros_val$mean_auc),4), "!?", sep = "")
+  })
+
+
+
+
+
+  ################# Twitter computations ######################
   #observeEvent(input$harvest, { print("im working")})
 
   dog_tweetdf <- eventReactive(input$harvest, {
@@ -239,9 +346,6 @@ server <- function(input, output) {
     #dogmatism test
     dog_tweetdf <- dogmrtism(tweetdf,"txt")
 
-    #write.csv(dog_tweetdf,"r_pyt_test_df.csv")
-  #  dog_tweetdf <-read.csv("r_pyt_test_df.csv") for debug
-
   })
 
   output$twit_plot <- renderPlot({
@@ -257,34 +361,67 @@ server <- function(input, output) {
   })
 
 
-  output$cross_plot <- renderPlot({
+  cross_output <- reactive({
 
     dog_tweetdf <- dog_tweetdf()
 
     dog_tweetdf$hashtag <- as.factor(dog_tweetdf$hashtag)
 
-    print(input$n_cross)
+    #dog_tweetdf <-read.csv("r_pyt_test_df2.csv")
+    #cros_val <- dog_tweetdf %>%
+    #  dog_list_return(vars = c("close_mind","open_mind"),
+    #                  above = paste("#", "r", sep =""),
+    #                  below = paste("#", "python", sep =""),
+    #                  pos = paste("#", "r", sep =""),
+    #                  n_fold = 10) #return ggplot2 friendly list of cross validation result
+
+
     cros_val <- dog_tweetdf %>%
       dog_list_return(vars = c("close_mind","open_mind"),
-                      above = hashtag1,
-                      below = hashtag2,
-                      pos = hashtag1,
-                      n_fold = input$n_cross) #return ggplot2 friendly list of cross validation result
-
-
-    cros_val %>%
-      arrange(desc(mean_auc)) %>%
-      dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
-      ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
-      geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
-      geom_line()+
-      geom_point() +
-      labs(title =  paste("Mean AUC (and 1 SD), ",hashtag1, " vs. ",hashtag2, sep =""), y = "In domain AUC")+
-      geom_text(size = 4,hjust = 1.5) +
-      theme_light() +
-      theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
-      scale_y_continuous(breaks = seq(0.5,1,0.01))
+                      above = paste("#", input$hashtag, sep =""),
+                      below = paste("#", input$hashtag2, sep =""),
+                      pos = paste("#", input$hashtag, sep =""),
+                      n_fold = 10) #return ggplot2 friendly list of cross validation result
   })
+
+    output$cross_plot <- renderPlot({
+
+      cross_output() %>%
+        arrange(desc(mean_auc)) %>%
+        dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
+        ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
+        geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
+        geom_line()+
+        geom_point() +
+        labs(title =  paste("Mean AUC (and 1 SD), ",input$hashtag, " vs. ",input$hashtag2, sep =""), y = "In domain AUC")+
+        geom_text(size = 4,hjust = 1.5) +
+        theme_light() +
+        theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
+        scale_y_continuous(breaks = seq(0.5,1,0.01))
+  })
+
+  output$image <- renderUI({
+    cros_val <- cross_output()
+
+    if (is.null(max(cros_val$mean_auc))){
+      NULL
+    }else if (max(cros_val$mean_auc) > 0.8){
+      setwd("~/GitHub/dogmrtism/dogmrtism/app")
+      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/done.png",width = "350", height = "200")
+    }else if (max(cros_val$mean_auc) > 0.6){
+      setwd("~/GitHub/dogmrtism/dogmrtism/app")
+      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/well-done-you-get-two-thumbs-up.jpg",width = "350", height = "200")
+
+    }else{
+      tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "350", height = "200")
+    }
+  })
+
+  output$cross_text <- renderText({
+    cros_val <- cross_output()
+    paste("Max performance of ",round(max(cros_val$mean_auc),4), "!?", sep = "")
+  })
+
 
 }
 
