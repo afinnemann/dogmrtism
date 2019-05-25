@@ -14,8 +14,6 @@
 #   Test Package:              'Ctrl + Shift + T'
 
 
-#use description
-library("tidyverse")
 
 ## use devtools::load_all() instead
 #source("pred_extract.R")
@@ -57,6 +55,10 @@ library("tidyverse")
 #' @examples
 #' dog_df <- dogmrtism(test_df, "txt")
 #'
+
+#Change!
+library(tidyverse)
+
 dogmrtism <- function(df, #main object df
                       col, #col name w text
                       language = "eng"){#german version not implemented yet
@@ -64,7 +66,7 @@ dogmrtism <- function(df, #main object df
   if (!is.character(df[[col]])) stop("Error: input is not a string")
 
   #change col name to txt, used in helper function.
-  df <- rename(df, txt = UQ(as.name(col)))
+  colnames(df)[colnames(df) == col] <- "txt"
 
 
 
@@ -73,6 +75,7 @@ dogmrtism <- function(df, #main object df
 
 
   #fix the naming! pass column as
+  colnames(df)[colnames(df) == "txt"] <- col
 
 
   return(df)

@@ -6,6 +6,14 @@ library(twitteR)
 library(ROAuth)
 library(instaR)
 
+############ R - Twitter authentication
+setup_twitter_oauth(consumer_key = "qpl7ViAqucYt25XUstVCnnkRq",
+                    consumer_secret = "6ZxLnDk97J3FVll3avurx6jLSE4pXrXikVh42gZgY0qPfQhqpT",
+                    access_token = "808277801321119744-OrOVucHoCqt9SiKAvLZrwcNeY4BpWFF",
+                    access_secret = "VgK0Xj0SvCoitesNc3oP93SZml6GMO9m4BqjOqTQG8A6H")
+
+
+########
 
 
 setwd("~/GitHub/dogmrtism/dogmrtism/app")
@@ -18,7 +26,7 @@ ui <- dashboardPage(
     titleWidth = "100%"),
 
 
-   ### Sidebar listing 3 pages
+  ### Sidebar listing 3 pages
   dashboardSidebar(
     sidebarMenu(
       menuItem("Introduction page", tabName = "theory",
@@ -75,29 +83,29 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
                                                     "Science Communication",
                                                     "Own Data input"),
                                     choiceValues = c("pol","vax","sc","own")
-                                      ),
+                       ),
                        fileInput("file1", "Choose CSV File",
                                  multiple = TRUE,
                                  accept = c("text/csv",
                                             "text/comma-separated-values,text/plain",
                                             ".csv")
-                                 ),
+                       ),
                        textInput(inputId = "txt_col","text column",
-                                  value = "txt"),
+                                 value = "txt"),
                        radioButtons("sep", "Separator:",
                                     choices = c(Comma = ",",
                                                 Semicolon = ";",
                                                 Tab = "\t"
-                                                ),
+                                    ),
                                     selected = ","
-                                    )
-                       ),
+                       )
+                ),
                 column(7,
                        h3("Dogmatism ratio"),
                        plotOutput("dog_plot")
-                       )
                 )
-              ),
+              )
+      ),
       ###### Third page
       tabItem(tabName = "Twitter",
               fluidRow(
@@ -115,11 +123,11 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
                        textInput("hashtag2", h3("Input another hashtag"),
                                  value = "Enter text..."),
                        sliderInput("n_slider", h3("Choose number of tweets"),
-                                   min = 0, max = 200, value = 20),
+                                   min = 0, max = 2000, value = 200),
                        actionButton("harvest", "Click to harvest Tweets")
 
 
-                       ),
+                ),
                 column(7,
                        h3("Dogmatism ratio"),
                        plotOutput("twit_plot")
@@ -127,15 +135,14 @@ a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would
               ),
               fluidRow(
                 column(6,
+                       h3("Cross validation options:"),
                        sliderInput("n_cross", h3("Choose number of folds"),
-                                   min = 5, max = 20, value = 10),
-                       actionButton("do_cross", "Click to perform cross validation")
-
+                                   min = 5, max = 20, value = 10)
                 ),
                 column(6,
                        h3("Cross validation results"),
                        plotOutput("cross_plot")
-                       )
+                )
 
 
               )
@@ -165,7 +172,7 @@ server <- function(input, output) {
       df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
       input$txt_col <- "txt"
 
-    }else if(input$show = "own"){
+    }else if(input$show == "own"){
       df <- read.csv(input$file1$datapath, header = T,sep = input$sep)
     }
 
@@ -193,76 +200,91 @@ server <- function(input, output) {
   dog_tweetdf <- eventReactive(input$harvest, {
 
 
-      #setup_twitter_oauth(consumer_key = input$consumer_key,
-      #                    consumer_secret = input$consumer_secret,
-      #                    access_token = input$acces_token,
-      #                    access_secret = input$access_secret)
+    #setup_twitter_oauth(consumer_key = input$consumer_key,
+    #                    consumer_secret = input$consumer_secret,
+    #                    access_token = input$acces_token,
+    #                    access_secret = input$access_secret)
 
-      hashtag1 <- paste("#", input$hashtag, sep ="")
-      hashtag2 <- paste("#", input$hashtag2, sep ="")
-      print(hashtag1)
-      print(hashtag2)
-      print(input$n_slider)
-
-
-      tweet1  <- searchTwitter(hashtag1, n = input$n_slider, retryOnRateLimit = 120)
-      tweet2  <- searchTwitter(hashtag2, n = input$n_slider, retryOnRateLimit = 120)
+    hashtag1 <- paste("#", input$hashtag, sep ="")
+    hashtag2 <- paste("#", input$hashtag2, sep ="")
 
 
 
+    tweet1  <- searchTwitter(hashtag1, n = input$n_slider, retryOnRateLimit = 120)
+    print("first scrape done")
+    tweet2  <- searchTwitter(hashtag2, n = input$n_slider, retryOnRateLimit = 120)
+    print("second scrape done")
 
-      tweetdf <- rbind(twListToDF(tweet1),
-                       twListToDF(tweet2))
+    tweetdf <- rbind(twListToDF(tweet1),
+                     twListToDF(tweet2))
+
+    #easy df for debugging
+    #hashtag1 <- "R"
+    #hashtag2 <- "python"
+    #tweet1  <- searchTwitter(hashtag1, n = 800, retryOnRateLimit = 120)
+    #tweet2  <- searchTwitter(hashtag2, n = 800, retryOnRateLimit = 120)
+    #tweetdf <- rbind(twListToDF(tweet1),twListToDF(tweet2))
 
 
-      #colnames to txt
-      colnames(tweetdf) <- c("txt",colnames(tweetdf)[-1])
 
-      #adding hashtag
-      tweetdf$hashtag <- c(rep(hashtag1, length(tweet1)),
-                           rep(hashtag2, length(tweet2)))
+    #colnames to txt
+    colnames(tweetdf) <- c("txt",colnames(tweetdf)[-1])
 
-      #dogmatism test
-      dog_tweetdf <- dogmrtism(tweetdf,"txt")
+    #adding hashtag
+    tweetdf$hashtag <- c(rep(hashtag1, length(tweet1)),
+                         rep(hashtag2, length(tweet2)))
 
+    tweetdf$txt <- as.character(tweetdf$txt)
 
+    #dogmatism test
+    dog_tweetdf <- dogmrtism(tweetdf,"txt")
+
+    #write.csv(dog_tweetdf,"r_pyt_test_df.csv")
+  #  dog_tweetdf <-read.csv("r_pyt_test_df.csv") for debug
 
   })
 
   output$twit_plot <- renderPlot({
 
-       dog_tweetdf() %>%
-         mutate(hashtag = as.factor(hashtag)) %>%
-          gather(key,value, close_mind, open_mind) %>%
-          ggplot(aes(hashtag, value)) +
-          geom_boxplot() +
-          facet_wrap(~key)
 
-    })
+    dog_tweetdf() %>%
+      mutate(hashtag = as.factor(hashtag)) %>%
+      gather(key,value, close_mind, open_mind) %>%
+      ggplot(aes(hashtag, value)) +
+      geom_boxplot() +
+      facet_wrap(~key)
 
-  eventReactive(input$do_cross,
-    output$cross_plot <- renderPlot({
-
-      dog_tweetdf() %>%
-        list_cross_val3(vars = c("close_mind","open_mind")) %>%
-        arrange(desc(mean_auc)) %>%
-        dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
-        ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
-        geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
-        geom_line()+
-        geom_point() +
-        labs(title =  "Mean AUC and SD, DOTA on Twitter Corpus", y = "In domain AUC")+
-        geom_text(size = 4,hjust = 1.5) +
-        theme_light() +
-        theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
-        #geom_hline(yintercept = 0.5) +
-        scale_y_continuous(breaks = seq(0.5,1,0.01))
+  })
 
 
-    })
-  )
+  output$cross_plot <- renderPlot({
+
+    dog_tweetdf <- dog_tweetdf()
+
+    dog_tweetdf$hashtag <- as.factor(dog_tweetdf$hashtag)
+
+    print(input$n_cross)
+    cros_val <- dog_tweetdf %>%
+      dog_list_return(vars = c("close_mind","open_mind"),
+                      above = hashtag1,
+                      below = hashtag2,
+                      pos = hashtag1,
+                      n_fold = input$n_cross) #return ggplot2 friendly list of cross validation result
 
 
+    cros_val %>%
+      arrange(desc(mean_auc)) %>%
+      dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
+      ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
+      geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
+      geom_line()+
+      geom_point() +
+      labs(title =  paste("Mean AUC (and 1 SD), ",hashtag1, " vs. ",hashtag2, sep =""), y = "In domain AUC")+
+      geom_text(size = 4,hjust = 1.5) +
+      theme_light() +
+      theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
+      scale_y_continuous(breaks = seq(0.5,1,0.01))
+  })
 
 }
 
