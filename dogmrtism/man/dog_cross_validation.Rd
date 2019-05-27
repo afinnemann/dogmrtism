@@ -4,13 +4,11 @@
 \alias{dog_cross_validation}
 \title{Cross validation function for dogmatism analysis}
 \usage{
-dog_cross_validation(data = da, folds_col, model_formula, perc = 0.5,
-  above_perc, below_perc, positive)
+dog_cross_validation(data = da, model_formula, perc = 0.5, above_perc,
+  below_perc, positive, n_fold = 10)
 }
 \arguments{
 \item{data}{A Twitter data frame}
-
-\item{folds_col}{A fold of unique IDs used to create folds}
 
 \item{model_formula}{the model to test}
 

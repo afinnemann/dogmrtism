@@ -5,6 +5,13 @@ library(dogmRtism)
 library(twitteR)
 library(ROAuth)
 library(instaR)
+library(plyr)
+library(pacman)
+p_load("stringr","tidyverse", quanteda, "tidytext", sentimentr, MuMIn, psych,  ModelMetrics, caret)
+p_load(boot, caret,pROC,finalfit)
+
+library(kableExtra)
+
 
 ############ R - Twitter authentication
 setup_twitter_oauth(consumer_key = "qpl7ViAqucYt25XUstVCnnkRq",
@@ -259,6 +266,8 @@ server <- function(input, output) {
   })
 
   output$dog_cross_plot <- renderPlot({
+    if (input$split == "yes") {
+    #group <- levels(df[,input$split_col])
     cros_val <- dog_cros_output()
 
       cros_val %>%
@@ -268,27 +277,30 @@ server <- function(input, output) {
       geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
       geom_line()+
       geom_point() +
-      labs(title =  paste("Mean AUC (and 1 SD), ",group[1], " vs. ",group[2], sep =""), y = "In domain AUC")+
+      #labs(title =  paste("Mean AUC (and 1 SD), ",group[1], " vs. ",group[2], sep =""), y = "In domain AUC")+
       geom_text(size = 4,hjust = 1.5) +
       theme_light() +
       theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
       scale_y_continuous(breaks = seq(0.5,1,0.01))
+    }
   })
 
   output$dog_image <- renderUI({
+    if (input$split == "yes") {
     cros_val <- dog_cros_output()
 
     if (is.null(max(cros_val$mean_auc))){
       NULL
     }else if (max(cros_val$mean_auc) > 0.8){
       setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/done.png",width = "350", height = "200")
+      tags$img(src = "https://memegenerator.net/img/instances/69738487/farewell-my-work-here-is-done.jpg",width = "350", height = "200")
     }else if (max(cros_val$mean_auc) > 0.6){
       setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/well-done-you-get-two-thumbs-up.jpg",width = "350", height = "200")
+      tags$img(src = "https://memegenerator.net/img/instances/71134675/just-wanted-to-say-good-job.jpg",width = "350", height = "200")
 
     }else{
       tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "350", height = "200")
+    }
     }
   })
 
@@ -407,10 +419,10 @@ server <- function(input, output) {
       NULL
     }else if (max(cros_val$mean_auc) > 0.8){
       setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/done.png",width = "350", height = "200")
+      tags$img(src = "https://memegenerator.net/img/instances/69738487/farewell-my-work-here-is-done.jpg",width = "350", height = "200")
     }else if (max(cros_val$mean_auc) > 0.6){
       setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "C:/Users/Adamowicz/Documents/GitHub/dogmrtism/dogmrtism/app/well-done-you-get-two-thumbs-up.jpg",width = "350", height = "200")
+      tags$img(src = "https://memegenerator.net/img/instances/71134675/just-wanted-to-say-good-job.jpg",width = "350", height = "200")
 
     }else{
       tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "350", height = "200")

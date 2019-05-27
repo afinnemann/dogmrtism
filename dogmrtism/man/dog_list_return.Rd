@@ -4,7 +4,8 @@
 \alias{dog_list_return}
 \title{Dogmatism cross validation return}
 \usage{
-dog_list_return(da, vars, outcome_var = "hashtag")
+dog_list_return(da, vars, outcome_var = "hashtag", above, below, pos,
+  n_fold = 10)
 }
 \arguments{
 \item{da}{takes a data frame as it's main argument. This function is designed to worked with Twitter data frame used
