@@ -1,7 +1,7 @@
 #' Cross validation function for dogmatism analysis
 #'
 #' This function is designed to test discriminability between two groups based on lingustic features related to dogmatic thinking.
-#' The function is desgined to do its work in the context of the dogmatism analytics shiny app. It will need tweaking to work in different
+#' It main works through "dog-list-return()" in the the context of the dogmatism analytics shiny app. It will need tweaking to work in different
 #' contexts.
 #' The analyis is by default a 10 fold cross-validation using a binomial logistic regression. Model performence is measured through mean
 #' area-under-the-curve (AUC) of each fold.
@@ -23,47 +23,47 @@
 
 dog_cross_validation <- function(data = da, model_formula, outcome_var ="hashtag",perc = 0.5, above_perc, below_perc, positive, n_fold = 10){
 
-#creates folds
+  #creates folds
   data$fold_id <- 1:nrow(data)
-  folds <- createFolds(data$fold_id, n_fold)
+  folds <- caret::createFolds(data$fold_id, n_fold)
 
   #looping over each fold
   cross_val <- sapply(seq_along(folds), function(x) {
 
-#filter into training and prediction sets
+    #filter into training and prediction sets
     train_folds = dplyr::filter(data, !(as.numeric(fold_id) %in% folds[[x]]))
     predict_fold = dplyr::filter(data, as.numeric(fold_id) %in% folds[[x]])
 
     #train model
     train_model <-  glm(model_formula, train_folds ,family="binomial",na.action = na.exclude)
 
-#create predictions from trained model
+    #create predictions from trained model
     predict_fold <- predict_fold %>%
-      dplyr::mutate(predictions_perc = inv.logit(predict(train_model, predict_fold, allow.new.levels = T)), #turn odds into probabilities
+      dplyr::mutate(predictions_perc = boot::inv.logit(predict(train_model, predict_fold, allow.new.levels = T)), #turn odds into probabilities
                     predictions = ifelse(predictions_perc > perc, above_perc,below_perc), #classify classes based on probabilities
                     predictions = as.factor(predictions))
-#create confusion matrix
+    #create confusion matrix
     conf_mat <- caret::confusionMatrix(data = predict_fold$predictions, reference = predict_fold[,outcome_var], positive = positive)
 
-#extract performance measures
+    #extract performance measures
     accuracy <- conf_mat$overall[1]
     sensitivity <- conf_mat$byClass[1]
     specificity <- conf_mat$byClass[2]
 
-#create ROC curve
+    #create ROC curve
     predict_fold$class <- as.factor(predict_fold[,outcome_var])
-    rocCurve <- roc(response = predict_fold$class,   predictor = predict_fold$predictions_perc)
-#extract AUC score
+    rocCurve <- pROC::roc(response = predict_fold$class,   predictor = predict_fold$predictions_perc)
+    #extract AUC score
     auc = pROC::auc(rocCurve)
 
-#extract parameter estimates
+    #extract parameter estimates
     fixed_ef <- coef(train_model)
 
     output <- c(accuracy, sensitivity, specificity, auc, fixed_ef)
 
 
   })
-#table of output
+  #table of output
   cross_df <- t(cross_val) %>%
     as.data.frame() %>%
     dplyr::rename("auc" ="V4")
@@ -78,8 +78,8 @@ dog_cross_validation <- function(data = da, model_formula, outcome_var ="hashtag
 #' in the dogmatism analytics Shiny app.
 #'
 #' @param da A data frame
-#' @param vars a list of variables that will form the predictors in the cross-validation. The will create 1 model for each variable with one predictor. For dogmatism analysis this
-#' will be close-minded and open-minded words
+#' @param vars a list of variables that will form the predictors in the cross-validation. The will create 1 model for each variable with one predictor. The default of "open_mind" and "close_mind"
+#' is compatible with the DF returned by "dogmrtism()".
 #' @param outcome_var the name of column storing the outcome variable. In case of tweets, "hashtag".
 #' @param above For classification, which class will be assigned for high scores on predictor variables, this is a factor level from "outcome-var".
 #' @param below The other factor level in the "outcome var"
@@ -90,8 +90,16 @@ dog_cross_validation <- function(data = da, model_formula, outcome_var ="hashtag
 #' @export
 #'
 #' @examples
-dog_list_return = function(da, vars, outcome_var = "hashtag", above, below, pos, n_fold = 10){
-  ldply(seq_along(vars), function(num){
+#'  dog_df <- dogmrtism(df, "txt")
+#'  cros_val_table <- dog_list_return(df2,
+#'                                    vars = c("open_mind", "close_mind")
+#'                                    outcome_var = "class",
+#'                                    above = "dogmatic",
+#'                                    below = "non_dogmatic",
+#'                                    pos = "dogmatic")
+#'
+dog_list_return = function(da, vars = c("open_mind","close_mind"), outcome_var = "hashtag", above, below, pos, n_fold = 10){
+  plyr::ldply(seq_along(vars), function(num){
 
     #extract a predictor from "vars"
     var1 = vars[num]
@@ -99,7 +107,7 @@ dog_list_return = function(da, vars, outcome_var = "hashtag", above, below, pos,
     #create model formula with outcome and predictor
     mdl_formula <- as.formula(paste(outcome_var, "~", `var1`))
 
-#run cross validation function
+    #run cross validation function
     Result <- dog_cross_validation(data = da,
                                    model_formula = mdl_formula,
                                    perc = 0.5, #classification threshold
@@ -111,9 +119,9 @@ dog_list_return = function(da, vars, outcome_var = "hashtag", above, below, pos,
 
     #create return table
     Result %>%
-      summarise(mean_auc = mean(auc),
-                sd_auc = sd(auc)) %>%
-      mutate(var = var1)
+      dplyr::summarise(mean_auc = mean(auc),
+                       sd_auc = sd(auc)) %>%
+      dplyr::mutate(var = var1)
 
 
   }

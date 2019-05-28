@@ -5,7 +5,7 @@ data("savedf")
 
 #mutate into string format
 savedf %>%
-  mutate(non_dogma = as.character(non_dogma),
+  dplyr::mutate(non_dogma = as.character(non_dogma),
          dogma = as.character(dogma)) -> dic
 
 #' helper function for dogmrtism
@@ -22,9 +22,9 @@ predictors_extract = function(df){
 
 #extracts predictors
   df = df %>%
-    dplyr::mutate(words = str_count(txt,"\\S+"),
-                  close_mind = str_count(txt,dic$dogma)/words,
-                  open_mind = str_count(txt,dic$non_dogma)/words
+    dplyr::mutate(words = stringr::str_count(txt,"\\S+"),
+                  close_mind = stringr::str_count(txt,dic$dogma)/words,
+                  open_mind = stringr::str_count(txt,dic$non_dogma)/words
 
     )
   return(df)

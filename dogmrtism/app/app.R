@@ -383,15 +383,6 @@ server <- function(input, output) {
 
     dog_tweetdf$hashtag <- as.factor(dog_tweetdf$hashtag)
 
-    #dog_tweetdf <-read.csv("r_pyt_test_df2.csv")
-    #cros_val <- dog_tweetdf %>%
-    #  dog_list_return(vars = c("close_mind","open_mind"),
-    #                  above = paste("#", "r", sep =""),
-    #                  below = paste("#", "python", sep =""),
-    #                  pos = paste("#", "r", sep =""),
-    #                  n_fold = 10) #return ggplot2 friendly list of cross validation result
-
-
     cros_val <- dog_tweetdf %>%
       dog_list_return(vars = c("close_mind","open_mind"),
                       above = paste("#", input$hashtag, sep =""),
