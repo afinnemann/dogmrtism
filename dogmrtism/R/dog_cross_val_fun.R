@@ -23,44 +23,47 @@
 
 dog_cross_validation <- function(data = da, model_formula, outcome_var ="hashtag",perc = 0.5, above_perc, below_perc, positive, n_fold = 10){
 
-
+#creates folds
   data$fold_id <- 1:nrow(data)
   folds <- createFolds(data$fold_id, n_fold)
 
-  #running loop
+  #looping over each fold
   cross_val <- sapply(seq_along(folds), function(x) {
 
-
+#filter into training and prediction sets
     train_folds = dplyr::filter(data, !(as.numeric(fold_id) %in% folds[[x]]))
     predict_fold = dplyr::filter(data, as.numeric(fold_id) %in% folds[[x]])
 
+    #train model
     train_model <-  glm(model_formula, train_folds ,family="binomial",na.action = na.exclude)
 
-
+#create predictions from trained model
     predict_fold <- predict_fold %>%
-      dplyr::mutate(predictions_perc = inv.logit(predict(train_model, predict_fold, allow.new.levels = T)),
-                    predictions = ifelse(predictions_perc > perc, above_perc,below_perc),
+      dplyr::mutate(predictions_perc = inv.logit(predict(train_model, predict_fold, allow.new.levels = T)), #turn odds into probabilities
+                    predictions = ifelse(predictions_perc > perc, above_perc,below_perc), #classify classes based on probabilities
                     predictions = as.factor(predictions))
-
+#create confusion matrix
     conf_mat <- caret::confusionMatrix(data = predict_fold$predictions, reference = predict_fold[,outcome_var], positive = positive)
 
+#extract performance measures
     accuracy <- conf_mat$overall[1]
     sensitivity <- conf_mat$byClass[1]
     specificity <- conf_mat$byClass[2]
 
+#create ROC curve
     predict_fold$class <- as.factor(predict_fold[,outcome_var])
     rocCurve <- roc(response = predict_fold$class,   predictor = predict_fold$predictions_perc)
-
+#extract AUC score
     auc = pROC::auc(rocCurve)
 
-
+#extract parameter estimates
     fixed_ef <- coef(train_model)
 
     output <- c(accuracy, sensitivity, specificity, auc, fixed_ef)
 
 
   })
-
+#table of output
   cross_df <- t(cross_val) %>%
     as.data.frame() %>%
     dplyr::rename("auc" ="V4")
@@ -90,19 +93,23 @@ dog_cross_validation <- function(data = da, model_formula, outcome_var ="hashtag
 dog_list_return = function(da, vars, outcome_var = "hashtag", above, below, pos, n_fold = 10){
   ldply(seq_along(vars), function(num){
 
+    #extract a predictor from "vars"
     var1 = vars[num]
 
+    #create model formula with outcome and predictor
     mdl_formula <- as.formula(paste(outcome_var, "~", `var1`))
 
-
+#run cross validation function
     Result <- dog_cross_validation(data = da,
                                    model_formula = mdl_formula,
-                                   perc = 0.5,
+                                   perc = 0.5, #classification threshold
                                    above_perc = above,
                                    below_perc = below,
                                    positive = pos,
                                    n_fold = n_fold,
                                    outcome_var = outcome_var)
+
+    #create return table
     Result %>%
       summarise(mean_auc = mean(auc),
                 sd_auc = sd(auc)) %>%

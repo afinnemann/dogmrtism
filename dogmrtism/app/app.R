@@ -23,28 +23,26 @@ setup_twitter_oauth(consumer_key = "qpl7ViAqucYt25XUstVCnnkRq",
 
 
 ########
-
-
-setwd("~/GitHub/dogmrtism/dogmrtism/app")
+#setwd("~/GitHub/dogmrtism/dogmrtism/app")
 
 
 # Define UI for application that draws a histogram
 ui <- dashboardPage(
   dashboardHeader(
-    title = "Twitter dogmatism Analytics",
+    title = "Twitter dogmatism Analytics", #main header
     titleWidth = "100%"),
 
 
-  ### Sidebar listing 3 pages
+  ### creating 3 pages in App
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Introduction page", tabName = "theory",
+      menuItem("Introduction page", tabName = "theory", #first page: theory
                icon = icon("info-circle")),
 
-      menuItem("Data input", tabName = "Validation", badgeLabel = "Try me!",
+      menuItem("Data input", tabName = "Validation", badgeLabel = "Try me!", #second page: input own data
                badgeColor = "blue", icon = icon("pencil-square-o")),
 
-      menuItem("Twitter input", tabName = "Twitter", badgeLabel = "Watch me!",
+      menuItem("Twitter input", tabName = "Twitter", badgeLabel = "Watch me!", #third page: scrabe directly from twitter
                badgeColor = "blue", icon = icon("pencil-square-o"))
     )
   ),
@@ -61,10 +59,14 @@ ui <- dashboardPage(
           column(7,
                  withMathJax(),
                  div(style = "font-size:125%",
-                     "
-                     tHIS APP DOES DOGMATISM ANALYTICS AND OTHER COOLS.
-Dogmaism is contextual, this measure levels of confidence. However, confidence can be more than warrented. I.e. a confidence analysis on
-a R tutorial by Hadley Wickham on somethin developed by hadley Wickham, we would hope for low uncertainty!
+                     " This app allows the user to perform dogmatism analytics of text. Either through own inputs (see page 2), or
+directly scrape and analyse Twitter data**. The analysis is based on the dogmRtism package, which utilizes the Dogmatism Quotient Dictionary
+developed by Suitbert Ertel in the 1980. Which the dogmRtism package this dictionary has gotten a arrival can now be applied computationally.
+The analysis is a simple dictionary match count of words related to open-mindedness and close-mindedness. By calculating this word-use ratio, we
+can form impressions of the level of dogmatic thinking. The practical impact of difference in dogmatic ratios is also evaluated.
+By providing source information the discriminability between groups is asses using 10 fold-cross validation of logisitc regression models
+predicting the source from open-minded and close-mindedness.
+** A Twitter authentication must be done before live Twitter scrabe will work, i.e. the user has to run the setup_twitter_oauth() function with own identifications key, see:
                      ")
 
           ),
