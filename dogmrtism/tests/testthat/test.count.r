@@ -10,24 +10,24 @@ test_df <- data.frame("txt" = c("always constant nonsense nonsense nonsense", #2
 test_df$txt <- as.character(test_df$txt)
 
 
-test_that("correct count close-mind", {
+testthat::test_that("correct count close-mind", {
   dog_df <- dogmrtism(test_df, "txt")
-  expect_equal(dog_df$close_mind,c(2/5, 3/5,0,0))
+  testthat::expect_equal(dog_df$close_mind,c(2/5, 3/5,0,0))
 
 })
 
 
-test_that("correct count open-mind", {
+testthat::test_that("correct count open-mind", {
   dog_df <- dogmrtism(test_df, "txt")
-  expect_equal(dog_df$open_mind, c(0,0, 5/5, 2/5))
+  testthat::expect_equal(dog_df$open_mind, c(0,0, 5/5, 2/5))
 
 })
 
 
 
-test_that("error occurs if txt is non character", {
+testthat::test_that("error occurs if txt is non character", {
 
-  expect_error(dogmrtism(data.frame("txt" = c(1,2,3)), "txt"), "Error: input is not a string")
+  testthat::expect_error(dogmrtism(data.frame("txt" = c(1,2,3)), "txt"), "Error: input is not a string")
 
 })
 
@@ -390,7 +390,7 @@ cross_val_test <- structure(list(class = structure(c(1L, 1L, 1L, 1L, 1L, 1L, 1L,
                                                                                                                                                                                                                                                                 0.133333333333333, 0.128205128205128, 0.217391304347826)), class = "data.frame", row.names = c(NA,
                                                                                                                                                                                                                                                                                                                                                                -578L))
 #Test that cross valiadtion function work, this is based on random fold
-test_that("cross validation works",{
+testthat::test_that("cross validation works",{
   set.seed(5)
   res <- dog_list_return(cross_val_test,
                          vars = c("open_mind","close_mind"),
@@ -399,8 +399,8 @@ test_that("cross validation works",{
                          below = "non_dogmatic",
                          pos = "dogmatic"
                         )
-  expect_equal(res$mean_auc, cross_val_correct$mean_auc)
-  expect_equal(res$sd_auc, cross_val_correct$sd_auc)
+  testthat::expect_equal(res$mean_auc, cross_val_correct$mean_auc)
+  testthat::expect_equal(res$sd_auc, cross_val_correct$sd_auc)
 
 
 })

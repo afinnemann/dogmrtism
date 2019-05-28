@@ -9,21 +9,13 @@ library(plyr)
 library(pacman)
 library(stringr)
 
-p_load("stringr","tidyverse", quanteda, "tidytext", sentimentr, MuMIn, psych,  ModelMetrics, caret)
-p_load(boot, caret,pROC,finalfit)
+#p_load("stringr","tidyverse", quanteda, "tidytext", sentimentr, MuMIn, psych,  ModelMetrics, caret)
+#p_load(boot, caret,pROC,finalfit)
 
 library(kableExtra)
 
 
 ############ R - Twitter authentication
-setup_twitter_oauth(consumer_key = "qpl7ViAqucYt25XUstVCnnkRq",
-                    consumer_secret = "6ZxLnDk97J3FVll3avurx6jLSE4pXrXikVh42gZgY0qPfQhqpT",
-                    access_token = "808277801321119744-OrOVucHoCqt9SiKAvLZrwcNeY4BpWFF",
-                    access_secret = "VgK0Xj0SvCoitesNc3oP93SZml6GMO9m4BqjOqTQG8A6H")
-
-
-########
-#setwd("~/GitHub/dogmrtism/dogmrtism/app")
 
 
 # Define UI for application that draws a histogram
@@ -66,7 +58,8 @@ The analysis is a simple dictionary match count of words related to open-mindedn
 can form impressions of the level of dogmatic thinking. The practical impact of difference in dogmatic ratios is also evaluated.
 By providing source information the discriminability between groups is asses using 10 fold-cross validation of logisitc regression models
 predicting the source from open-minded and close-mindedness.
-** A Twitter authentication must be done before live Twitter scrabe will work, i.e. the user has to run the setup_twitter_oauth() function with own identifications key, see:
+
+(* A Twitter authentication must be done before live Twitter scrabe will work, i.e. the user has to run the setup_twitter_oauth() function with own identifications key, see: http://thinktostart.com/twitter-authentification-with-r/)
                      ")
 
           ),
@@ -87,14 +80,12 @@ predicting the source from open-minded and close-mindedness.
       ##### Second Page
       tabItem(tabName = "Validation", #this consists of 1 row with two columns
               fluidRow(
-                column(5,#column 1: user input
+                column(6,#column 1: user input
                        ## create button to choose one of 3 default data sets, or input own
                        radioButtons("show","Show:",
                                     choiceNames = c("Political news comments",
-                                                    "Twiter anti-vax vs vax",
-                                                    "Science Communication",
                                                     "Own Data input"),
-                                    choiceValues = c("pol","vax","sc","own")
+                                    choiceValues = c("pol","own")
                        ),
                        #if own data chosen, this allow user to input csv formatted files
                        fileInput("file1", "Choose CSV File",
@@ -118,75 +109,62 @@ predicting the source from open-minded and close-mindedness.
                                     choiceNames = c("yes","no"),
                                     selected = "no"),
 
-                       textInput(inputId = "split_col","column used group analysis",
+                       textInput(inputId = "split_col","Group analysis based on this column",
                                  value = "enter column.")
 
                 ),
-                column(7, #column two, visualizing results
+                column(6, #column two, visualizing results
                        h3("Dogmatism ratio"),
                        plotOutput("dog_plot")
-                ),
+                )
+              ),
+              fluidRow(
                 column(6,
                        textOutput("dog_cross_text"),
                        uiOutput("dog_image")
-
-                       #h4(img(src="https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg", width = "350", height = "200"))
-
                 ),
                 column(6,
                        h3("Cross validation results"),
                        plotOutput("dog_cross_plot")
                 )
-              )
-      ),
-      ###### Third page
-      tabItem(tabName = "Twitter",
-              fluidRow(
-                column(5,
-                       # textInput("consumer_key", h3("Input consumer_key"),
-                       #           value = "Enter text..."),
-                       # textInput("consumer_secret", h3("Input consumer_secret"),
-                       #           value = "Enter text..."),
-                       # textInput("access_token ", h3("Input access_token "),
-                       #           value = "Enter text..."),
-                       # textInput("access_secret", h3("Input access_secret"),
-                       #           value = "Enter text..."),
-                       textInput("hashtag", h3("Input hashtag"),
-                                 value = "Enter text..."),
-                       textInput("hashtag2", h3("Input another hashtag"),
-                                 value = "Enter text..."),
-                       sliderInput("n_slider", h3("Choose number of tweets"),
-                                   min = 0, max = 2000, value = 200),
-                       actionButton("harvest", "Click to harvest Tweets")
 
 
-                ),
-                column(7,
-                       h3("Dogmatism ratio"),
-                       plotOutput("twit_plot")
-                )
               ),
-              fluidRow(
-                column(6,
-                       textOutput("cross_text"),
-                       uiOutput("image")
+              ###### Third page
+              tabItem(tabName = "Twitter",
+                      fluidRow(
+                        column(5,
+                               textInput("hashtag", h3("Input hashtag"),
+                                         value = "Enter text..."),
+                               textInput("hashtag2", h3("Input another hashtag"),
+                                         value = "Enter text..."),
+                               sliderInput("n_slider", h3("Choose number of tweets"),
+                                           min = 0, max = 2000, value = 200),
+                               actionButton("harvest", "Click to harvest Tweets")
 
-                       #h4(img(src="https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg", width = "350", height = "200"))
 
-                ),
-                column(6,
-                       h3("Cross validation results"),
-                       plotOutput("cross_plot")
-                )
-
-
+                        ),
+                        column(7,
+                               h3("Dogmatism ratio"), #descriptives of open- and close-minded words
+                               plotOutput("twit_plot")
+                        )
+                      ),
+                      fluidRow(
+                        column(6,
+                               textOutput("cross_text"), #max performance
+                               uiOutput("image")
+                        ),
+                        column(6,
+                               h3("Cross validation results"),
+                               plotOutput("cross_plot") #plot of cross validation results
+                        )
+                      )
               )
-
-
       )
     )
   )
 )
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -201,19 +179,6 @@ server <- function(input, output) {
       dog_df <- df %>%
         mutate(txt = as.character(txt)) %>%
         dogmrtism("txt")
-
-    }else if (input$show == "vax") {
-      df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
-      dog_df <- df %>%
-        mutate(txt = as.character(txt)) %>%
-        dogmrtism("txt")
-
-    }else if(input$show == "sc"){
-      df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
-      dog_df <- df %>%
-        mutate(txt = as.character(txt)) %>%
-        dogmrtism("txt")
-
 
     }else if(input$show == "own"){
       df <- read.csv(input$file1$datapath, header = T,sep = input$sep)
@@ -238,13 +203,13 @@ server <- function(input, output) {
 
       long %>%
         ggplot(aes(long[,input$split_col], ratio)) +
-          geom_boxplot() +
-          facet_wrap(~ variable)
+        geom_boxplot() +
+        facet_wrap(~ variable)
     }else{
       df %>%
         gather(variable,ratio, close_mind, open_mind) %>%
         ggplot(aes(variable, ratio)) +
-          geom_boxplot()
+        geom_boxplot()
 
     }
   })
@@ -256,11 +221,12 @@ server <- function(input, output) {
 
     if (input$split == "yes") {
       df <- df()
-      #group <- levels(df[,"hashtag"])
+
       group <- levels(df[,input$split_col])
 
       cros_val <- df %>%
         dog_list_return(vars = c("close_mind","open_mind"),
+                        outcome_var = input$split_col,
                         above = group[1],
                         below = group[2],
                         pos = group[1],
@@ -271,40 +237,40 @@ server <- function(input, output) {
 
   output$dog_cross_plot <- renderPlot({
     if (input$split == "yes") {
-    #group <- levels(df[,input$split_col])
-    cros_val <- dog_cros_output()
+      #group <- levels(df[,input$split_col])
+      cros_val <- dog_cros_output()
 
       cros_val %>%
-      arrange(desc(mean_auc)) %>%
-      dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
-      ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
-      geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
-      geom_line()+
-      geom_point() +
-      #labs(title =  paste("Mean AUC (and 1 SD), ",group[1], " vs. ",group[2], sep =""), y = "In domain AUC")+
-      geom_text(size = 4,hjust = 1.5) +
-      theme_light() +
-      theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
-      scale_y_continuous(breaks = seq(0.5,1,0.01))
+        arrange(desc(mean_auc)) %>%
+        dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
+        ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
+        geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
+        geom_line()+
+        geom_point() +
+        #labs(title =  paste("Mean AUC (and 1 SD), ",group[1], " vs. ",group[2], sep =""), y = "In domain AUC")+
+        geom_text(size = 4,hjust = 1.5) +
+        theme_light() +
+        theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
+        scale_y_continuous(breaks = seq(0.5,1,0.01))
     }
   })
 
   output$dog_image <- renderUI({
     if (input$split == "yes") {
-    cros_val <- dog_cros_output()
+      cros_val <- dog_cros_output()
 
-    if (is.null(max(cros_val$mean_auc))){
-      NULL
-    }else if (max(cros_val$mean_auc) > 0.8){
-      setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "https://memegenerator.net/img/instances/69738487/farewell-my-work-here-is-done.jpg",width = "350", height = "200")
-    }else if (max(cros_val$mean_auc) > 0.6){
-      setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "https://memegenerator.net/img/instances/71134675/just-wanted-to-say-good-job.jpg",width = "350", height = "200")
+      if (is.null(max(cros_val$mean_auc))){
+        NULL
+      }else if (max(cros_val$mean_auc) > 0.8){
+        setwd("~/GitHub/dogmrtism/dogmrtism/app")
+        tags$img(src = "https://memegenerator.net/img/instances/69738487/farewell-my-work-here-is-done.jpg",width = "300", height = "200")
+      }else if (max(cros_val$mean_auc) > 0.6){
+        setwd("~/GitHub/dogmrtism/dogmrtism/app")
+        tags$img(src = "https://memegenerator.net/img/instances/71134675/just-wanted-to-say-good-job.jpg",width = "300", height = "200")
 
-    }else{
-      tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "350", height = "200")
-    }
+      }else{
+        tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "300", height = "200")
+      }
     }
   })
 
@@ -385,26 +351,27 @@ server <- function(input, output) {
 
     cros_val <- dog_tweetdf %>%
       dog_list_return(vars = c("close_mind","open_mind"),
+                      outcome_var = "hashtag",
                       above = paste("#", input$hashtag, sep =""),
                       below = paste("#", input$hashtag2, sep =""),
                       pos = paste("#", input$hashtag, sep =""),
                       n_fold = 10) #return ggplot2 friendly list of cross validation result
   })
 
-    output$cross_plot <- renderPlot({
+  output$cross_plot <- renderPlot({
 
-      cross_output() %>%
-        arrange(desc(mean_auc)) %>%
-        dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
-        ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
-        geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
-        geom_line()+
-        geom_point() +
-        labs(title =  paste("Mean AUC (and 1 SD), ",input$hashtag, " vs. ",input$hashtag2, sep =""), y = "In domain AUC")+
-        geom_text(size = 4,hjust = 1.5) +
-        theme_light() +
-        theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
-        scale_y_continuous(breaks = seq(0.5,1,0.01))
+    cross_output() %>%
+      arrange(desc(mean_auc)) %>%
+      dplyr::rename("In_domain" = "mean_auc","In_domainSD" = "sd_auc","predictors" = "var") %>%
+      ggplot(aes(x=predictors, y= In_domain, label = round(In_domain,4))) +
+      geom_errorbar(aes(ymin=In_domain-In_domainSD, ymax=In_domain+In_domainSD), width=.2, color = "blue") +
+      geom_line()+
+      geom_point() +
+      labs(title =  paste("Mean AUC (and 1 SD), ",input$hashtag, " vs. ",input$hashtag2, sep =""), y = "In domain AUC")+
+      geom_text(size = 4,hjust = 1.5) +
+      theme_light() +
+      theme(axis.text.x = element_text(angle = 10, hjust = 1, size = 13))+
+      scale_y_continuous(breaks = seq(0.5,1,0.01))
   })
 
   output$image <- renderUI({
@@ -414,13 +381,13 @@ server <- function(input, output) {
       NULL
     }else if (max(cros_val$mean_auc) > 0.8){
       setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "https://memegenerator.net/img/instances/69738487/farewell-my-work-here-is-done.jpg",width = "350", height = "200")
+      tags$img(src = "https://memegenerator.net/img/instances/69738487/farewell-my-work-here-is-done.jpg",width = "300", height = "200")
     }else if (max(cros_val$mean_auc) > 0.6){
       setwd("~/GitHub/dogmrtism/dogmrtism/app")
-      tags$img(src = "https://memegenerator.net/img/instances/71134675/just-wanted-to-say-good-job.jpg",width = "350", height = "200")
+      tags$img(src = "https://memegenerator.net/img/instances/71134675/just-wanted-to-say-good-job.jpg",width = "300", height = "200")
 
     }else{
-      tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "350", height = "200")
+      tags$img(src = "https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg",width = "300", height = "200")
     }
   })
 
