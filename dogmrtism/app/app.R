@@ -13,7 +13,7 @@ library(stringr)
 #p_load(boot, caret,pROC,finalfit)
 
 library(kableExtra)
-
+load()
 
 ############ R - Twitter authentication
 
@@ -51,14 +51,13 @@ ui <- dashboardPage(
           column(7,
                  withMathJax(),
                  div(style = "font-size:125%",
-                     " This app allows the user to perform dogmatism analytics of text. Either through own inputs (see page 2), or
+                     "This app allows the user to perform dogmatism analytics of text. Either through own inputs (see page 2), or
 directly scrape and analyse Twitter data**. The analysis is based on the dogmRtism package, which utilizes the Dogmatism Quotient Dictionary
-developed by Suitbert Ertel in the 1980. Which the dogmRtism package this dictionary has gotten a arrival can now be applied computationally.
+developed by Suitbert Ertel in 1980. Which the dogmRtism package this dictionary is revived and can now be applied computationally.
 The analysis is a simple dictionary match count of words related to open-mindedness and close-mindedness. By calculating this word-use ratio, we
-can form impressions of the level of dogmatic thinking. The practical impact of difference in dogmatic ratios is also evaluated.
-By providing source information the discriminability between groups is asses using 10 fold-cross validation of logisitc regression models
+can form impressions of the level of dogmatic thinking. The practical impact of the difference in dogmatic ratios is also evaluated.
+By providing source information the discriminability between groups is asses using 10 fold-cross validation of logistic regression models
 predicting the source from open-minded and close-mindedness.
-
 (* A Twitter authentication must be done before live Twitter scrabe will work, i.e. the user has to run the setup_twitter_oauth() function with own identifications key, see: http://thinktostart.com/twitter-authentification-with-r/)
                      ")
 
@@ -129,7 +128,8 @@ predicting the source from open-minded and close-mindedness.
                 )
 
 
-              ),
+              )
+      ),
               ###### Third page
               tabItem(tabName = "Twitter",
                       fluidRow(
@@ -160,7 +160,6 @@ predicting the source from open-minded and close-mindedness.
                         )
                       )
               )
-      )
     )
   )
 )
@@ -175,7 +174,8 @@ server <- function(input, output) {
 
 
     if (input$show == "pol"){
-      df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
+      load("shiny_pol_df.Rda")
+      #df <- read.csv("shiny_pol_test.csv", header = T,sep = input$sep)
       dog_df <- df %>%
         mutate(txt = as.character(txt)) %>%
         dogmrtism("txt")
@@ -275,8 +275,10 @@ server <- function(input, output) {
   })
 
   output$dog_cross_text <- renderText({
+    if (input$split == "yes") {
     cros_val <- dog_cros_output()
     paste("Max performance of ",round(max(cros_val$mean_auc),4), "!?", sep = "")
+    }
   })
 
 
