@@ -4,21 +4,25 @@
 \alias{dog_cross_validation}
 \title{Cross validation function for dogmatism analysis}
 \usage{
-dog_cross_validation(data = da, model_formula, perc = 0.5, above_perc,
-  below_perc, positive, n_fold = 10)
+dog_cross_validation(data = da, model_formula, outcome_var = "hashtag",
+  perc = 0.5, above_perc, below_perc, positive, n_fold = 10)
 }
 \arguments{
-\item{data}{A Twitter data frame}
+\item{data}{A data frame}
 
-\item{model_formula}{the model to test}
+\item{model_formula}{A model formula of outcome and predictor to be used as a logistic regression}
 
-\item{perc}{classification percentage, i.e. threshold for when a prediction will be assigned to a specific group}
+\item{outcome_var}{colum containing the true classes of each observation.}
+
+\item{perc}{classification percentage, i.e. threshold for predicting classes from the model. This forms the basis of a confusion matrix}
 
 \item{above_perc}{name assigned when p(x) > perc}
 
 \item{below_perc}{name assigned when p(x) < perc}
 
 \item{positive}{Which factor level is the target.}
+
+\item{n_fold}{number of folds}
 }
 \value{
 returns a 10 by 5 data frame. The five columsn are accuracy, sensitivity,  specificity, auc and fixed effects of each fold.
@@ -27,7 +31,7 @@ returns a 10 by 5 data frame. The five columsn are accuracy, sensitivity,  speci
 This function is designed to test discriminability between two groups based on lingustic features related to dogmatic thinking.
 The function is desgined to do its work in the context of the dogmatism analytics shiny app. It will need tweaking to work in different
 contexts.
-The analyis is a 10 fold cross-validation using a binomial logistic regression. Model performence is measured through mean
+The analyis is by default a 10 fold cross-validation using a binomial logistic regression. Model performence is measured through mean
 area-under-the-curve (AUC) of each fold.
 }
 \examples{

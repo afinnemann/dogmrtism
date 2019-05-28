@@ -1,8 +1,9 @@
 
 
-
+#load dictionary files
 data("savedf")
 
+#mutate into string format
 savedf %>%
   mutate(non_dogma = as.character(non_dogma),
          dogma = as.character(dogma)) -> dic
@@ -11,7 +12,7 @@ savedf %>%
 #'
 #'Extracts close-minded, open-minded and total words for a txt file
 #'
-#' @param df
+#' @param df takes a data frame with a column named "txt"
 #'
 #' @return
 #' @export
@@ -19,14 +20,13 @@ savedf %>%
 #' @examples
 predictors_extract = function(df){
 
-
+#extracts predictors
   df = df %>%
     dplyr::mutate(words = str_count(txt,"\\S+"),
                   close_mind = str_count(txt,dic$dogma)/words,
                   open_mind = str_count(txt,dic$non_dogma)/words
 
-    ) %>%
-    dplyr::filter(words != 0)
+    )
   return(df)
 }
 

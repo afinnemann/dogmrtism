@@ -3,15 +3,17 @@
 #' This function is designed to test discriminability between two groups based on lingustic features related to dogmatic thinking.
 #' The function is desgined to do its work in the context of the dogmatism analytics shiny app. It will need tweaking to work in different
 #' contexts.
-#' The analyis is a 10 fold cross-validation using a binomial logistic regression. Model performence is measured through mean
+#' The analyis is by default a 10 fold cross-validation using a binomial logistic regression. Model performence is measured through mean
 #' area-under-the-curve (AUC) of each fold.
 #'
-#' @param data A Twitter data frame
-#' @param model_formula the model to test
-#' @param perc classification percentage, i.e. threshold for when a prediction will be assigned to a specific group
+#' @param data A data frame
+#' @param model_formula A model formula of outcome and predictor to be used as a logistic regression
+#' @param outcome_var colum containing the true classes of each observation.
+#' @param perc classification percentage, i.e. threshold for predicting classes from the model. This forms the basis of a confusion matrix
 #' @param above_perc name assigned when p(x) > perc
 #' @param below_perc name assigned when p(x) < perc
 #' @param positive Which factor level is the target.
+#' @param n_fold number of folds
 #'
 #' @return returns a 10 by 5 data frame. The five columsn are accuracy, sensitivity,  specificity, auc and fixed effects of each fold.
 #' @export
@@ -19,7 +21,7 @@
 #' @examples
 #'
 
-dog_cross_validation <- function(data = da, model_formula, perc = 0.5, above_perc, below_perc, positive, n_fold = 10){
+dog_cross_validation <- function(data = da, model_formula, outcome_var ="hashtag",perc = 0.5, above_perc, below_perc, positive, n_fold = 10){
 
 
   data$fold_id <- 1:nrow(data)
@@ -40,13 +42,13 @@ dog_cross_validation <- function(data = da, model_formula, perc = 0.5, above_per
                     predictions = ifelse(predictions_perc > perc, above_perc,below_perc),
                     predictions = as.factor(predictions))
 
-    conf_mat <- caret::confusionMatrix(data = predict_fold$predictions, reference = predict_fold$hashtag, positive = positive)
+    conf_mat <- caret::confusionMatrix(data = predict_fold$predictions, reference = predict_fold[,outcome_var], positive = positive)
 
     accuracy <- conf_mat$overall[1]
     sensitivity <- conf_mat$byClass[1]
     specificity <- conf_mat$byClass[2]
 
-    predict_fold$class <- as.factor(predict_fold$hashtag)
+    predict_fold$class <- as.factor(predict_fold[,outcome_var])
     rocCurve <- roc(response = predict_fold$class,   predictor = predict_fold$predictions_perc)
 
     auc = pROC::auc(rocCurve)
@@ -69,13 +71,17 @@ dog_cross_validation <- function(data = da, model_formula, perc = 0.5, above_per
 
 #' Dogmatism cross validation return
 #'
-#' dog_list_return returns the results of the dogmatism cross validation in a ggplot2 friendly format.
-#'
-#' @param da takes a data frame as it's main argument. This function is designed to worked with Twitter data frame used
+#' dog_list_return returns the results of the dogmatism cross validation in a ggplot2 friendly format. This function is designed to work with the Twitter data frames used
 #' in the dogmatism analytics Shiny app.
-#' @param vars a list of variables that will form the predictors in the cross-validation. For dogmatism analysis this
+#'
+#' @param da A data frame
+#' @param vars a list of variables that will form the predictors in the cross-validation. The will create 1 model for each variable with one predictor. For dogmatism analysis this
 #' will be close-minded and open-minded words
-#' @param outcome_var the name of column storing the outcome variable. Mostly likely "hashtag
+#' @param outcome_var the name of column storing the outcome variable. In case of tweets, "hashtag".
+#' @param above For classification, which class will be assigned for high scores on predictor variables, this is a factor level from "outcome-var".
+#' @param below The other factor level in the "outcome var"
+#' @param pos What is counted as a positive in the confusion matrix
+#' @param n_fold number of folds
 #'
 #' @return
 #' @export
@@ -95,7 +101,8 @@ dog_list_return = function(da, vars, outcome_var = "hashtag", above, below, pos,
                                    above_perc = above,
                                    below_perc = below,
                                    positive = pos,
-                                   n_fold = n_fold)
+                                   n_fold = n_fold,
+                                   outcome_var = outcome_var)
     Result %>%
       summarise(mean_auc = mean(auc),
                 sd_auc = sd(auc)) %>%
@@ -105,3 +112,4 @@ dog_list_return = function(da, vars, outcome_var = "hashtag", above, below, pos,
   }
   )
 }
+

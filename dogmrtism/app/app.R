@@ -7,6 +7,8 @@ library(ROAuth)
 library(instaR)
 library(plyr)
 library(pacman)
+library(stringr)
+
 p_load("stringr","tidyverse", quanteda, "tidytext", sentimentr, MuMIn, psych,  ModelMetrics, caret)
 p_load(boot, caret,pROC,finalfit)
 

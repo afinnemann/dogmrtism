@@ -7,7 +7,7 @@
 predictors_extract(df)
 }
 \arguments{
-\item{df}{}
+\item{df}{takes a data frame with a column named "txt"}
 }
 \description{
 Extracts close-minded, open-minded and total words for a txt file

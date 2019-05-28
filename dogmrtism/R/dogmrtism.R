@@ -37,11 +37,11 @@
 # }
 
 
-
+library(tidyverse)
 
 #' Analysis of Dogmatism Quotient
 #'
-#'This functiosn runs the core dogmatism analysis of text data. It is based on the dogmatism dictionary developed by Suirtbert Ertel.
+#'This functiosn runs the core dogmatism analysis of text data. It is based on the Dogmatism Quotient Dictionary developed by Suitbert Ertel.
 #'This dictionary contains a list of words related to open-mindedness and close-minded less. The analysis consists of calculating the
 #'proportion of these words
 #'
@@ -55,35 +55,22 @@
 #' @examples
 #' dog_df <- dogmrtism(test_df, "txt")
 #'
-library(tidyverse)
-
 dogmrtism <- function(df, #main object df
                       col, #col name w text
                       language = "eng"){#german version not implemented yet
 
+  if (!is.data.frame(df)) stop("Error: input is not a data frame")
   if (!is.character(df[[col]])) stop("Error: input is not a string")
 
   #change col name to txt, used in helper function.
   colnames(df)[colnames(df) == col] <- "txt"
 
-
-
-
+  #extracting open-minded and close-minded scores
   df <- predictors_extract(df)
 
-
-  #fix the naming! pass column as
+  #reverting column name
   colnames(df)[colnames(df) == "txt"] <- col
 
 
   return(df)
-  }
-
-
-#questions:
-#
-#load packages?
-#return nice object - a table, with a list inside
-#documentation how is it written.
-#license, which one?
-
+}

@@ -40,9 +40,30 @@ non_dogma_list = str_replace_all(non_dogma_list, " \\|","|")
 savedf <- data.frame("dogma" = dogma_list,
                      "non_dogma" = non_dogma_list)
 
-savedf$dogma <- str_replace(savedf$dogma," always", "always")
+#savedf$dogma <- str_replace(savedf$dogma," always", "always")
 
-use_data(savedf,overwrite = T)
+#use_data(savedf,overwrite = T)
 
 
 #should it be publicly available.
+
+
+##
+
+df <- read.csv("shiny_pol_test.csv")
+
+df$txt <- as.character(df$txt)
+df2 <- dogmrtism(df,"txt")
+
+dput_df <- df2[,c("class","post_id","words","close_mind","open_mind")]
+
+dput(dput_df)
+
+library(plyr)
+set.seed(5)
+res <- dog_list_return(da = dput_df,
+                vars = c("open_mind","close_mind"),
+                outcome_var = "class",
+                above = "dogmatic",
+                below = "non_dogmatic",
+                pos = "dogmatic")
