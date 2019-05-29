@@ -34,7 +34,7 @@ ui <- dashboardPage(
       menuItem("Data input", tabName = "Validation", badgeLabel = "Try me!", #second page: input own data
                badgeColor = "blue", icon = icon("pencil-square-o")),
 
-      menuItem("Twitter input", tabName = "Twitter", badgeLabel = "Watch me!", #third page: scrabe directly from twitter
+      menuItem("Twitter input", tabName = "Twitter", badgeLabel = "Watch me!", #third page: scrape directly from twitter
                badgeColor = "blue", icon = icon("pencil-square-o"))
     )
   ),
@@ -58,7 +58,7 @@ The analysis is a simple dictionary match count of words related to open-mindedn
 can form impressions of the level of dogmatic thinking. The practical impact of the difference in dogmatic ratios is also evaluated.
 By providing source information the discriminability between groups is asses using 10 fold-cross validation of logistic regression models
 predicting the source from open-minded and close-mindedness.
-(* A Twitter authentication must be done before live Twitter scrabe will work, i.e. the user has to run the setup_twitter_oauth() function with own identifications key, see: http://thinktostart.com/twitter-authentification-with-r/)
+(* A Twitter authentication must be done before live Twitter scrape will work, i.e. the user has to run the setup_twitter_oauth() function with own identifications key, see: http://thinktostart.com/twitter-authentification-with-r/)
                      ")
 
           ),

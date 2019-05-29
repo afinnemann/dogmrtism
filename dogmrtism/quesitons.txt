@@ -1,2 +1,0 @@
-col names as argument, non strings?
-hide helper functions?
